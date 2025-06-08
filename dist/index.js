@@ -9,6 +9,7 @@ var COMMENT = "comm";
 var RULESET = "rule";
 var DECLARATION = "decl";
 var IMPORT = "@import";
+var NAMESPACE = "@namespace";
 var KEYFRAMES = "@keyframes";
 var LAYER = "@layer";
 
@@ -281,18 +282,24 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
             if (character2 === 123)
               if (offset === 0)
                 parse(characters2, root, reference, reference, props, rulesets, length2, points, children);
-              else
-                switch (atrule === 99 && charat(characters2, 3) === 110 ? 100 : atrule) {
-                  // d l m s
-                  case 100:
+              else {
+                switch (atrule) {
+                  // c(ontainer)
+                  case 99:
+                    if (charat(characters2, 3) === 110) break;
+                  // l(ayer)
                   case 108:
+                    if (charat(characters2, 2) === 97) break;
+                  default:
+                    offset = 0;
+                  // d(ocument) m(edia) s(upports)
+                  case 100:
                   case 109:
                   case 115:
-                    parse(value, reference, reference, rule && append(ruleset(value, reference, reference, 0, 0, rules, points, type, rules, props = [], length2, children), children), rules, children, length2, points, rule ? props : children);
-                    break;
-                  default:
-                    parse(characters2, reference, reference, reference, [""], children, 0, points, children);
                 }
+                if (offset) parse(value, reference, reference, rule && append(ruleset(value, reference, reference, 0, 0, rules, points, type, rules, props = [], length2, children), children), rules, children, length2, points, rule ? props : children);
+                else parse(characters2, reference, reference, reference, [""], children, 0, points, children);
+              }
         }
         index = offset = property = 0, variable = ampersand = 1, type = characters2 = "", length2 = pseudo;
         break;
@@ -547,6 +554,7 @@ function stringify(element, index, children, callback) {
     case LAYER:
       if (element.children.length) break;
     case IMPORT:
+    case NAMESPACE:
     case DECLARATION:
       return element.return = element.return || element.value;
     case COMMENT:
@@ -605,7 +613,7 @@ function prefixer(element, index, children, callback) {
 }
 
 // src/index.js
-var src_default = (options) => {
+var index_default = (options) => {
   return {
     name: "CSS Autoprefixer",
     setup(build) {
@@ -630,5 +638,5 @@ var src_default = (options) => {
   };
 };
 export {
-  src_default as default
+  index_default as default
 };
