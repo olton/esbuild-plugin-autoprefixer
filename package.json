@@ -1,6 +1,6 @@
 {
   "name": "@olton/esbuild-plugin-autoprefixer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A CSS autoprefixer plugin for esbuild",
   "author": {
     "name": "Serhii Pimenov",
@@ -28,9 +28,9 @@
   },
   "devDependencies": {
     "@olton/esbuild-plugin-progress": "^0.3.0",
-    "esbuild": "^0.24.0"
+    "esbuild": "^0.25.5"
   },
   "dependencies": {
-    "stylis": "^4.3.4"
+    "stylis": "^4.3.6"
   }
 }
